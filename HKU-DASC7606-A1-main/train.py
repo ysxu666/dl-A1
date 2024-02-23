@@ -55,9 +55,9 @@ def main(args=None):
 
     retinanet.training = True
     optimizer = optim.Adam(retinanet.parameters(), lr=1e-4)
-
+# 学习率调度器，用于在训练过程中调整学习率
     scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[48, 64])
-
+# 这是一个固定长度的队列，用于存储最近的500个损失值。
     loss_hist = collections.deque(maxlen=500)
     epoch_loss_list = []
 
