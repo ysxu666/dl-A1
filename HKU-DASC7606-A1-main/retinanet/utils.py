@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 
-
+# conv3x3创建具有3x3卷积核的层，而conv1x1创建具有1x1卷积核的层。这些层通常用于特征提取和维度变换。
 def conv3x3(in_planes, out_planes, stride=1, bias=True):
     """3x3 convolution with padding"""
     return nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride,
