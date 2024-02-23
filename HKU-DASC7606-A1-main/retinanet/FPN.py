@@ -1,6 +1,6 @@
 import torch.nn as nn
 from retinanet.utils import conv1x1, conv3x3
-
+# 用于从不同层次的特征图中提取特征
 class PyramidFeatureNetwork(nn.Module):
     def __init__(self, C3_size, C4_size, C5_size, feature_size=256):
         super(PyramidFeatureNetwork, self).__init__()
