@@ -85,6 +85,12 @@ class FocalLoss(nn.Module):
                     regression_losses.append(torch.tensor(0).float())
 
                 continue
+            # 在retinanet/model.py的forward_train函数中，在调用calc_iou之前添加
+            print("Anchors shape:", anchors[0, :, :].shape)
+            print("Anchors content:", anchors[0, :, :])
+            print("Bbox_annotation shape:", bbox_annotation[:, :4].shape)
+            print("Bbox_annotation content:", bbox_annotation[:, :4])
+
 
             IoU = calc_iou(anchors[0, :, :], bbox_annotation[:, :4]) # num_anchors x num_annotations
 
