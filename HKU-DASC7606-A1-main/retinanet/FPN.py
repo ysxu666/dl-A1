@@ -32,10 +32,8 @@ class PyramidFeatureNetwork(nn.Module):
         
         # upsample C5 to get P5 from the FPN paper
         self.P5_1 = conv1x1(C5_size, feature_size)
-        # self.P5_upsampled = nn.Upsample(scale_factor="?", mode='nearest')
         self.P5_upsampled = nn.Upsample(scale_factor=2, mode='nearest')
         self.P5_2 = conv3x3(feature_size, feature_size, stride=1)
-        # self.P5_2 = conv3x3(feature_size, feature_size, stride="?")
 
         # add P5 elementwise to C4
         self.P4_1 = conv1x1(C4_size, feature_size)
