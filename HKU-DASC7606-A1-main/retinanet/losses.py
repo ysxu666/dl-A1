@@ -23,7 +23,7 @@ def calc_iou(a, b):
     intersection = max(0, maxx - minx) * max(0, maxy - miny)
     ##################################################################
     ua = area_a + area_b - intersection
-    # ua = torch.clamp(ua, min=1e-8)
+    ua = torch.clamp(ua, min=1e-8)
 
     IoU = intersection / ua
 
@@ -119,11 +119,11 @@ class FocalLoss(nn.Module):
             # TODO: Please substitute the "?" to calculate Focal Loss
             ##################################################################
             
-            focal_weight = torch.pow((1 - classification), gamma) if targets == 1 else torch.pow(classification, gamma)
+            focal_weight = alpha_factor * torch.pow(torch.abs(targets - classification), gamma)
 
-            bce = -(targets * torch.log(classification) + (1 - targets) * torch.log(1 - classification))
+            bce = -(targets * torch.log(classification) + (1.0 - targets) * torch.log(1.0 - classification))
 
-            cls_loss = alpha_factor * focal_weight * bce
+            cls_loss = focal_weight * bce
 
             ##################################################################
 
