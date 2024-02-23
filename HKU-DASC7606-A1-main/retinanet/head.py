@@ -1,8 +1,11 @@
 import torch.nn as nn
 import torch
 from retinanet.utils import conv1x1, conv3x3
+# RetinaNet架构中的关键部分，负责进行对象检测的两个主要任务：边界框回归,。通过这种方式，RetinaNet能够同时进行对象检测的两个主要任务：定位（哪里）和识别（是什么）
+
 
 class RegressionHead(nn.Module):
+    # 网络由四个3x3卷积层组成，每个卷积层后面跟着一个ReLU激活函数。
     def __init__(self, num_features_in, num_anchors=9, feature_size=256):
         super(RegressionHead, self).__init__()
 
@@ -44,7 +47,7 @@ class RegressionHead(nn.Module):
 class ClassificationHead(nn.Module):
     def __init__(self, num_features_in, num_anchors=9, num_classes=80, prior=0.01, feature_size=256):
         super(ClassificationHead, self).__init__()
-
+# 也包含四个3x3卷积层和ReLU激活函数。
         self.num_classes = num_classes
         self.num_anchors = num_anchors
 
