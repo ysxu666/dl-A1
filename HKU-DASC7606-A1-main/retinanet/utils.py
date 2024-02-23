@@ -26,7 +26,7 @@ class BasicBlock(nn.Module):
         self.bn2 = nn.BatchNorm2d(planes)
         self.downsample = downsample
         self.stride = stride
-
+# x代表着传递给网络层的输入数据。在典型的深度学习模型中，这通常是一个特征图（feature map），即上一层网络的输出。
     def forward(self, x):
         residual = x
 
