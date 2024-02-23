@@ -2,30 +2,52 @@ import numpy as np
 import torch
 import torch.nn as nn
 
+# def calc_iou(a, b):
+#     ###################################################################
+#     # TODO: Please modify and fill the codes below to calculate the iou of the two boxes a and b
+#     ###################################################################
+    
+#     # intersection = 0.0
+#     # ua = 1.0
+    
+#     # a and b should be (x1,y1,x2,y2)
+    
+#     area_a = (a[2] - a[0]) * (a[3] - a[1])
+#     area_b = (b[2] - b[0]) * (b[3] - b[1])
+    
+#     minx = max(a[0], b[0])
+#     maxx = min(a[2], b[2])
+#     miny = max(a[1], b[1])
+#     maxy = min(a[3], b[3])
+    
+#     intersection = max(0, maxx - minx) * max(0, maxy - miny)
+#     ##################################################################
+#     ua = area_a + area_b - intersection
+#     ua = torch.clamp(ua, min=1e-8)
+
+#     IoU = intersection / ua
+
+#     return IoU
 def calc_iou(a, b):
-    ###################################################################
-    # TODO: Please modify and fill the codes below to calculate the iou of the two boxes a and b
-    ###################################################################
-    
-    # intersection = 0.0
-    # ua = 1.0
-    
     # a and b should be (x1,y1,x2,y2)
     
-    area_a = (a[2] - a[0]) * (a[3] - a[1])
-    area_b = (b[2] - b[0]) * (b[3] - b[1])
-    
-    minx = max(a[0], b[0])
-    maxx = min(a[2], b[2])
-    miny = max(a[1], b[1])
-    maxy = min(a[3], b[3])
-    
-    intersection = max(0, maxx - minx) * max(0, maxy - miny)
-    ##################################################################
-    ua = area_a + area_b - intersection
-    ua = torch.clamp(ua, min=1e-8)
+    # Expand dimensions of a to [N, 4] if it's not already
+    if a.dim() == 1:
+        a = a.unsqueeze(0)
 
-    IoU = intersection / ua
+    # Calculate intersection
+    max_xy = torch.min(a[:, 2:], b[:, 2:])
+    min_xy = torch.max(a[:, :2], b[:, :2])
+    intersection = torch.clamp((max_xy - min_xy), min=0)
+    intersection_area = intersection[:, 0] * intersection[:, 1]
+
+    # Calculate union
+    area_a = ((a[:, 2] - a[:, 0]) * (a[:, 3] - a[:, 1])).unsqueeze(-1)
+    area_b = ((b[:, 2] - b[:, 0]) * (b[:, 3] - b[:, 1])).unsqueeze(-1)
+    union_area = area_a + area_b - intersection_area
+
+    # Compute IoU
+    IoU = intersection_area / torch.clamp(union_area, min=1e-8)
 
     return IoU
 
