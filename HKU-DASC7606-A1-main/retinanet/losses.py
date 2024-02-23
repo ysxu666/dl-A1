@@ -147,11 +147,10 @@ class FocalLoss(nn.Module):
             # TODO: Please substitute the "?" to calculate Focal Loss
             ##################################################################
             
-            focal_weight = alpha_factor * torch.pow(torch.abs(targets - classification), gamma)
-
+            focal_weight = torch.where(torch.eq(targets, 1.), alpha_factor, 1. - alpha_factor) * torch.pow(1. - classification, gamma)
             bce = -(targets * torch.log(classification) + (1.0 - targets) * torch.log(1.0 - classification))
-
             cls_loss = focal_weight * bce
+
 
             ##################################################################
 
