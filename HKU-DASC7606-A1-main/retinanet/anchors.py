@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 import torch.nn as nn
-
+# 为RetinaNet模型提供了一组密集的锚点，这些锚点用于在不同位置和尺度上检测对象。通过在特征图的每个位置上使用多种尺寸和比例的锚点，RetinaNet能够有效地检测各种大小和形状的对象。
 
 class Anchors(nn.Module):
     def __init__(self, pyramid_levels=None, strides=None, sizes=None, ratios=None, scales=None):
