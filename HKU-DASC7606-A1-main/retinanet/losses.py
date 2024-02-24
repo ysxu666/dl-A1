@@ -107,8 +107,16 @@ class FocalLoss(nn.Module):
 
 
             IoU = calc_iou(anchors[0, :, :], bbox_annotation[:, :4]) # num_anchors x num_annotations
-
-            IoU_max, IoU_argmax = torch.max(IoU, dim=1) # num_anchors x 1
+            print("IoU shape:", IoU.shape)
+            print("IoU content:", IoU)
+            
+            # 如果 IoU 是一维的，使用 dim=0
+            if IoU.dim() == 1:
+                IoU_max, IoU_argmax = torch.max(IoU, dim=0)
+            else:
+                # 如果 IoU 是多维的，根据实际情况调整
+                IoU_max, IoU_argmax = torch.max(IoU, dim=1)
+            # IoU_max, IoU_argmax = torch.max(IoU, dim=1) # num_anchors x 1
 
             # compute the loss for classification
             targets = torch.ones(classification.shape) * -1
