@@ -109,7 +109,7 @@ class FocalLoss(nn.Module):
             print("IoU shape:", IoU.shape)
             print("IoU content:", IoU)
 
-            IoU_max, IoU_argmax = torch.max(IoU, dim=1) # num_anchors x 1
+            IoU_max, IoU_argmax = torch.max(IoU, dim=0) # num_anchors x 1
 
             # compute the loss for classification
             targets = torch.ones(classification.shape) * -1
