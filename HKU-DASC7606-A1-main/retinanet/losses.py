@@ -17,7 +17,7 @@ def calc_iou(a, b):
 
     # 计算并集
     union_area = area_a + area_b - inter_area
-
+    union_area = torch.clamp(union_area, min=1e-8)  # 避免除以零
     # 计算IoU
     IoU = inter_area / union_area
 
