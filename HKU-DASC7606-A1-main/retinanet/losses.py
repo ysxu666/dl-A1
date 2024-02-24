@@ -108,8 +108,15 @@ class FocalLoss(nn.Module):
             IoU = calc_iou(anchors[0, :, :], bbox_annotation[:, :4]) # num_anchors x num_annotations
             print("IoU shape:", IoU.shape)
             print("IoU content:", IoU)
-
-            IoU_max, IoU_argmax = torch.max(IoU, dim=0) # num_anchors x 1
+# 检查是否只有一个边界框
+            if bbox_annotation.shape[0] == 1:
+                # 如果只有一个边界框，就重复它以匹配每个锚点
+                assigned_annotations = bbox_annotation.repeat(anchor.shape[0], 1)
+            else:
+                # 多个边界框的情况（如果适用）
+                IoU_max, IoU_argmax = torch.max(IoU, dim=0)
+                assigned_annotations = bbox_annotation[IoU_argmax, :]
+            # IoU_max, IoU_argmax = torch.max(IoU, dim=1) # num_anchors x 1
 
             # compute the loss for classification
             targets = torch.ones(classification.shape) * -1
