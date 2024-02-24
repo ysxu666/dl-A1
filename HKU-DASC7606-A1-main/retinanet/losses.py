@@ -1,22 +1,21 @@
 import numpy as np
 import torch
 import torch.nn as nn
-
 def calc_iou(a, b):
-    # 计算每个框的面积
-    area_a = (a[2] - a[0]) * (a[3] - a[1])
-    area_b = (b[2] - b[0]) * (b[3] - b[1])
-    
-    # 找到交集框的坐标
-    inter_x1 = max(a[0], b[0])
-    inter_y1 = max(a[1], b[1])
-    inter_x2 = min(a[2], b[2])
-    inter_y2 = min(a[3], b[3])
-    
-    # 计算交集的面积
-    inter_area = max(inter_x2 - inter_x1, 0) * max(inter_y2 - inter_y1, 0)
-    
-    # 计算并集的面积
+    # 扩展b以与a的形状匹配
+    b = b.expand(a.shape[0], -1)
+
+    # 计算交集
+    max_xy = torch.min(a[:, 2:], b[:, 2:])
+    min_xy = torch.max(a[:, :2], b[:, :2])
+    inter = torch.clamp((max_xy - min_xy), min=0)
+    inter_area = inter[:, 0] * inter[:, 1]
+
+    # 计算各自的面积
+    area_a = (a[:, 2] - a[:, 0]) * (a[:, 3] - a[:, 1])
+    area_b = (b[:, 2] - b[:, 0]) * (b[:, 3] - b[:, 1])
+
+    # 计算并集
     union_area = area_a + area_b - inter_area
     union_area = torch.clamp(union_area, min=1e-8)
 
@@ -24,6 +23,8 @@ def calc_iou(a, b):
     IoU = inter_area / union_area
 
     return IoU
+
+
 
 # def calc_iou(a, b):
 #     ###################################################################
