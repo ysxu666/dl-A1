@@ -1,47 +1,46 @@
 import numpy as np
 import torch
 import torch.nn as nn
-# def calc_iou(a, b):
-#     # 扩展b以与a的形状匹配
-#     b = b.expand(a.shape[0], -1)
-
-#     # 计算交集
-#     max_xy = torch.min(a[:, 2:], b[:, 2:])
-#     min_xy = torch.max(a[:, :2], b[:, :2])
-#     inter = torch.clamp((max_xy - min_xy), min=0)
-#     inter_area = inter[:, 0] * inter[:, 1]
-
-#     # 计算各自的面积
-#     area_a = (a[:, 2] - a[:, 0]) * (a[:, 3] - a[:, 1])
-#     area_b = (b[:, 2] - b[:, 0]) * (b[:, 3] - b[:, 1])
-
-#     # 计算并集
-#     union_area = area_a + area_b - inter_area
-#     union_area = torch.clamp(union_area, min=1e-8)
-
-#     # 计算IoU
-#     IoU = inter_area / union_area
-
-#     return IoU
-
-
-
 def calc_iou(a, b):
-    ###################################################################
-    # TODO: Please modify and fill the codes below to calculate the iou of the two boxes a and b
-    ###################################################################
-    
-    intersection = 0.0
-    ua = 1.0
+    # 扩展b以匹配a的形状
+    b = b.expand_as(a)
 
-    ##################################################################
+    # 计算交集区域的坐标
+    max_xy = torch.min(a[:, 2:], b[:, 2:])
+    min_xy = torch.max(a[:, :2], b[:, :2])
+    inter = torch.clamp((max_xy - min_xy), min=0)
+    inter_area = inter[:, 0] * inter[:, 1]
 
-    
-    ua = torch.clamp(ua,min=1e-8)
+    # 计算a和b的面积
+    area_a = (a[:, 2] - a[:, 0]) * (a[:, 3] - a[:, 1])
+    area_b = (b[:, 2] - b[:, 0]) * (b[:, 3] - b[:, 1])
 
-    IoU = intersection / ua
+    # 计算并集
+    union_area = area_a + area_b - inter_area
+
+    # 计算IoU
+    IoU = inter_area / union_area
 
     return IoU
+
+
+
+# def calc_iou(a, b):
+#     ###################################################################
+#     # TODO: Please modify and fill the codes below to calculate the iou of the two boxes a and b
+#     ###################################################################
+    
+#     intersection = 0.0
+#     ua = 1.0
+
+#     ##################################################################
+
+    
+#     ua = torch.clamp(ua,min=1e-8)
+
+#     IoU = intersection / ua
+
+#     return IoU
 
 class FocalLoss(nn.Module):
 
