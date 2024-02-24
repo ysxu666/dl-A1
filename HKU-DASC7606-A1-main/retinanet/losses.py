@@ -1,47 +1,47 @@
 import numpy as np
 import torch
 import torch.nn as nn
-def calc_iou(a, b):
-    # 扩展b以与a的形状匹配
-    b = b.expand(a.shape[0], -1)
-
-    # 计算交集
-    max_xy = torch.min(a[:, 2:], b[:, 2:])
-    min_xy = torch.max(a[:, :2], b[:, :2])
-    inter = torch.clamp((max_xy - min_xy), min=0)
-    inter_area = inter[:, 0] * inter[:, 1]
-
-    # 计算各自的面积
-    area_a = (a[:, 2] - a[:, 0]) * (a[:, 3] - a[:, 1])
-    area_b = (b[:, 2] - b[:, 0]) * (b[:, 3] - b[:, 1])
-
-    # 计算并集
-    union_area = area_a + area_b - inter_area
-    union_area = torch.clamp(union_area, min=1e-8)
-
-    # 计算IoU
-    IoU = inter_area / union_area
-
-    return IoU
-
-
-
 # def calc_iou(a, b):
-#     ###################################################################
-#     # TODO: Please modify and fill the codes below to calculate the iou of the two boxes a and b
-#     ###################################################################
-    
-#     intersection = 0.0
-#     ua = 1.0
+#     # 扩展b以与a的形状匹配
+#     b = b.expand(a.shape[0], -1)
 
-#     ##################################################################
+#     # 计算交集
+#     max_xy = torch.min(a[:, 2:], b[:, 2:])
+#     min_xy = torch.max(a[:, :2], b[:, :2])
+#     inter = torch.clamp((max_xy - min_xy), min=0)
+#     inter_area = inter[:, 0] * inter[:, 1]
 
-    
-#     ua = torch.clamp(ua, min=1e-8)
+#     # 计算各自的面积
+#     area_a = (a[:, 2] - a[:, 0]) * (a[:, 3] - a[:, 1])
+#     area_b = (b[:, 2] - b[:, 0]) * (b[:, 3] - b[:, 1])
 
-#     IoU = intersection / ua
+#     # 计算并集
+#     union_area = area_a + area_b - inter_area
+#     union_area = torch.clamp(union_area, min=1e-8)
+
+#     # 计算IoU
+#     IoU = inter_area / union_area
 
 #     return IoU
+
+
+
+def calc_iou(a, b):
+    ###################################################################
+    # TODO: Please modify and fill the codes below to calculate the iou of the two boxes a and b
+    ###################################################################
+    
+    intersection = 0.0
+    ua = 1.0
+
+    ##################################################################
+
+    
+    ua = torch.clamp(ua,1e-8)
+
+    IoU = intersection / ua
+
+    return IoU
 
 class FocalLoss(nn.Module):
 
@@ -109,14 +109,8 @@ class FocalLoss(nn.Module):
             IoU = calc_iou(anchors[0, :, :], bbox_annotation[:, :4]) # num_anchors x num_annotations
             print("IoU shape:", IoU.shape)
             print("IoU content:", IoU)
-            
-            # 如果 IoU 是一维的，使用 dim=0
-            if IoU.dim() == 1:
-                IoU_max, IoU_argmax = torch.max(IoU, dim=0)
-            else:
-                # 如果 IoU 是多维的，根据实际情况调整
-                IoU_max, IoU_argmax = torch.max(IoU, dim=1)
-            # IoU_max, IoU_argmax = torch.max(IoU, dim=1) # num_anchors x 1
+
+            IoU_max, IoU_argmax = torch.max(IoU, dim=1) # num_anchors x 1
 
             # compute the loss for classification
             targets = torch.ones(classification.shape) * -1
