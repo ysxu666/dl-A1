@@ -29,28 +29,21 @@ import torch.nn as nn
 
 #     return IoU
 def calc_iou(a, b):
-    # 确保a和b是二维张量，形状为[N, 4]
-    if a.dim() == 1:
-        a = a.unsqueeze(0)
-    if b.dim() == 1:
-        b = b.unsqueeze(0)
+    ###################################################################
+    # TODO: Please modify and fill the codes below to calculate the iou of the two boxes a and b
+    ###################################################################
+    
+    intersection = 0.0
+    ua = 1.0
 
-    # 计算交集
-    max_xy = torch.min(a[:, 2:], b[:, 2:])
-    min_xy = torch.max(a[:, :2], b[:, :2])
-    intersection = torch.clamp((max_xy - min_xy), min=0)
-    intersection_area = intersection[:, 0] * intersection[:, 1]
+    ##################################################################
 
-    # 计算并集
-    area_a = ((a[:, 2] - a[:, 0]) * (a[:, 3] - a[:, 1])).unsqueeze(1)
-    area_b = ((b[:, 2] - b[:, 0]) * (b[:, 3] - b[:, 1])).unsqueeze(1)
-    union_area = area_a + area_b - intersection_area
+    
+    ua = torch.clamp(ua, min=1e-8)
 
-    # 计算IoU
-    IoU = intersection_area / torch.clamp(union_area, min=1e-8)
+    IoU = intersection / ua
 
     return IoU
-
 
 class FocalLoss(nn.Module):
 
