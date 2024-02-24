@@ -2,48 +2,45 @@ import numpy as np
 import torch
 import torch.nn as nn
 
+def calc_iou(a, b):
+    # 计算每个框的面积
+    area_a = (a[2] - a[0]) * (a[3] - a[1])
+    area_b = (b[2] - b[0]) * (b[3] - b[1])
+    
+    # 找到交集框的坐标
+    inter_x1 = max(a[0], b[0])
+    inter_y1 = max(a[1], b[1])
+    inter_x2 = min(a[2], b[2])
+    inter_y2 = min(a[3], b[3])
+    
+    # 计算交集的面积
+    inter_area = max(inter_x2 - inter_x1, 0) * max(inter_y2 - inter_y1, 0)
+    
+    # 计算并集的面积
+    union_area = area_a + area_b - inter_area
+    union_area = torch.clamp(union_area, min=1e-8)
+
+    # 计算IoU
+    IoU = inter_area / union_area
+
+    return IoU
+
 # def calc_iou(a, b):
 #     ###################################################################
 #     # TODO: Please modify and fill the codes below to calculate the iou of the two boxes a and b
 #     ###################################################################
     
-#     # intersection = 0.0
-#     # ua = 1.0
-    
-#     # a and b should be (x1,y1,x2,y2)
-    
-#     area_a = (a[2] - a[0]) * (a[3] - a[1])
-#     area_b = (b[2] - b[0]) * (b[3] - b[1])
-    
-#     minx = max(a[0], b[0])
-#     maxx = min(a[2], b[2])
-#     miny = max(a[1], b[1])
-#     maxy = min(a[3], b[3])
-    
-#     intersection = max(0, maxx - minx) * max(0, maxy - miny)
+#     intersection = 0.0
+#     ua = 1.0
+
 #     ##################################################################
-#     ua = area_a + area_b - intersection
+
+    
 #     ua = torch.clamp(ua, min=1e-8)
 
 #     IoU = intersection / ua
 
 #     return IoU
-def calc_iou(a, b):
-    ###################################################################
-    # TODO: Please modify and fill the codes below to calculate the iou of the two boxes a and b
-    ###################################################################
-    
-    intersection = 0.0
-    ua = 1.0
-
-    ##################################################################
-
-    
-    ua = torch.clamp(ua, min=1e-8)
-
-    IoU = intersection / ua
-
-    return IoU
 
 class FocalLoss(nn.Module):
 
