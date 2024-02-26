@@ -2,33 +2,23 @@ import numpy as np
 import torch
 import torch.nn as nn
 def calc_iou(a, b):
-    IoUs = []
-    for i in range(b.shape[0]):  # 遍历每个边界框
-        bbox = b[i].unsqueeze(0).expand_as(a)  # 扩展当前边界框
+    area = (b[:, 2] - b[:, 0]) * (b[:, 3] - b[:, 1])
 
-        # 计算交集区域的坐标
-        max_xy = torch.min(a[:, 2:], bbox[:, 2:])
-        min_xy = torch.max(a[:, :2], bbox[:, :2])
-        inter = torch.clamp((max_xy - min_xy), min=0)
-        inter_area = inter[:, 0] * inter[:, 1]
+    iw = torch.min(torch.unsqueeze(a[:, 2], dim=1), b[:, 2]) - torch.max(torch.unsqueeze(a[:, 0], 1), b[:, 0])
+    ih = torch.min(torch.unsqueeze(a[:, 3], dim=1), b[:, 3]) - torch.max(torch.unsqueeze(a[:, 1], 1), b[:, 1])
 
-        # 计算a和bbox的面积
-        area_a = (a[:, 2] - a[:, 0]) * (a[:, 3] - a[:, 1])
-        area_b = (bbox[:, 2] - bbox[:, 0]) * (bbox[:, 3] - bbox[:, 1])
+    iw = torch.clamp(iw, min=0)
+    ih = torch.clamp(ih, min=0)
 
-        # 计算并集
-        union_area = area_a + area_b - inter_area
-        union_area = torch.clamp(union_area, min=1e-8)  # 避免除以零
+    ua = torch.unsqueeze((a[:, 2] - a[:, 0]) * (a[:, 3] - a[:, 1]), dim=1) + area - iw * ih
 
-        # 计算IoU
-        IoU = inter_area / union_area
-        IoUs.append(IoU)
+    ua = torch.clamp(ua, min=1e-8)
 
-    IoUs = torch.stack(IoUs, dim=0)  # 将结果堆叠成一个新的张量
-    IoU_max, _ = torch.max(IoUs, dim=0)  # 取每个a与所有b的最大IoU
+    intersection = iw * ih
 
-    return IoU_max
+    IoU = intersection / ua
 
+    return IoU
 
 
 
