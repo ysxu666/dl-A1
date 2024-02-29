@@ -14,7 +14,7 @@ from retinanet.dataloader import CocoDataset, collater, Resizer, \
 from retinanet.eval import Evaluation
     
 from torch.utils.data import DataLoader
-
+from tensorboardX import SummaryWriter
 def main(args=None):
     parser = argparse.ArgumentParser(description='Simple training script for training a RetinaNet network.')
     parser.add_argument('--coco_path', help='Path to COCO directory', default='./data')
@@ -23,6 +23,11 @@ def main(args=None):
     parser.add_argument('--epochs', help='Number of epochs', type=int, default=72)
 
     parser = parser.parse_args(args)
+        # 构建基于参数的实验名称
+    experiment_name = f"depth_{parser.depth}_epochs_{parser.epochs}"
+
+    # 创建 TensorBoardX writer
+    writer = SummaryWriter(f'runs/{experiment_name}')
 
 
     if not os.path.exists(parser.output_path):
@@ -66,7 +71,7 @@ def main(args=None):
 
     loss_hist = collections.deque(maxlen=500)
     epoch_loss_list = []
-
+    
     print('Num training images: {}'.format(len(dataset_train)))
     for epoch_num in range(parser.epochs):
         
@@ -122,6 +127,9 @@ def main(args=None):
                 print(
                     'Epoch: {} | Iteration: {} | Classification loss: {:1.5f} | Regression loss: {:1.5f} | Running loss: {:1.5f}'.format(
                         epoch_num, iter_num, float(classification_loss), float(regression_loss), np.mean(loss_hist)))
+            writer.add_scalar('Loss/train', float(loss), epoch_num * len(dataloader_train) + iter_num)
+            writer.add_scalar('Loss/classification', float(classification_loss), epoch_num * len(dataloader_train) + iter_num)
+            writer.add_scalar('Loss/regression', float(regression_loss), epoch_num * len(dataloader_train) + iter_num)
 
             del classification_loss
             del regression_loss
@@ -141,6 +149,7 @@ def main(args=None):
 
     print(epoch_loss_list)
     torch.save(retinanet, os.path.join(parser.output_path, 'model_final.pt'))
+    writer.close()
 
 
 if __name__ == '__main__':
