@@ -149,6 +149,7 @@ def main(args=None):
 
     print(epoch_loss_list)
     torch.save(retinanet, os.path.join(parser.output_path, 'model_final.pt'))
+    writer.flush()
     writer.close()
 
 
