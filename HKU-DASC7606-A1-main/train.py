@@ -130,7 +130,7 @@ def main(args=None):
             writer.add_scalar('Loss/train', float(loss), epoch_num * len(dataloader_train) + iter_num)
             writer.add_scalar('Loss/classification', float(classification_loss), epoch_num * len(dataloader_train) + iter_num)
             writer.add_scalar('Loss/regression', float(regression_loss), epoch_num * len(dataloader_train) + iter_num)
-            writer.add scalar("learning rate", optimizer.state_ dict()['param_groups'][0]['Ir'], epoch num*len(dataloader train) + iter num)
+            writer.add_scalar("learning rate", optimizer.state_dict()['param_groups'][0]['Ir'], epoch_num*len(dataloader_train) + iter_num)
 
             del classification_loss
             del regression_loss
