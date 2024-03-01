@@ -15,6 +15,15 @@ from retinanet.eval import Evaluation
     
 from torch.utils.data import DataLoader
 from tensorboardX import SummaryWriter
+import random
+
+# 设置随机种子
+def set_seed(seed):
+    torch.manual_seed(seed)
+
+seed = 3407  # 您可以选择任何喜欢的数字作为种子
+set_seed(seed)
+
 def main(args=None):
     parser = argparse.ArgumentParser(description='Simple training script for training a RetinaNet network.')
     parser.add_argument('--coco_path', help='Path to COCO directory', default='./data')
