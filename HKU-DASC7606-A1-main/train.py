@@ -20,6 +20,13 @@ import random
 # 设置随机种子
 def set_seed(seed):
     torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed) # if you are using multi-GPU.
+    np.random.seed(seed) # Numpy module.
+    random.seed(seed) # Python random module.
+    torch.manual_seed(seed)
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
 
 seed = 3407  # 您可以选择任何喜欢的数字作为种子
 set_seed(seed)
