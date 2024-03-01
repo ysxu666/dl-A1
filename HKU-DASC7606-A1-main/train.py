@@ -81,7 +81,7 @@ def main(args=None):
             retinanet = retinanet.cuda()
 
     retinanet.training = True
-    optimizer = optim.Adam(retinanet.parameters(), lr=1e-4)
+    optimizer = optim.Adam(retinanet.parameters(), lr=1e-5)
 
     scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=[48, 64])
 
