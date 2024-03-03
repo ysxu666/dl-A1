@@ -8,27 +8,6 @@ class PyramidFeatureNetwork(nn.Module):
         ###################################################################
         # TODO: Please substitute the "?" with specific numbers
         ##################################################################
-
-# # upsample C5 to get P5 from the FPN paper
-#         self.P5_1 = nn.Conv2d(C5_size, feature_size, kernel_size=1, stride=1, padding=0)
-#         self.P5_upsampled = nn.Upsample(scale_factor=2, mode='nearest') #scale_factor为缩放大小
-#         self.P5_2 = nn.Conv2d(feature_size, feature_size, kernel_size=3, stride=1, padding=1)
-
-#         # add P5 elementwise to C4
-#         self.P4_1 = nn.Conv2d(C4_size, feature_size, kernel_size=1, stride=1, padding=0)
-#         self.P4_upsampled = nn.Upsample(scale_factor=2, mode='nearest')
-#         self.P4_2 = nn.Conv2d(feature_size, feature_size, kernel_size=3, stride=1, padding=1)
-
-#         # add P4 elementwise to C3
-#         self.P3_1 = nn.Conv2d(C3_size, feature_size, kernel_size=1, stride=1, padding=0)
-#         self.P3_2 = nn.Conv2d(feature_size, feature_size, kernel_size=3, stride=1, padding=1)
-
-#         # "P6 is obtained via a 3x3 stride-2 conv on C5"
-#         self.P6 = nn.Conv2d(C5_size, feature_size, kernel_size=3, stride=2, padding=1)
-
-#         # "P7 is computed by applying ReLU followed by a 3x3 stride-2 conv on P6"
-#         self.P7_1 = nn.ReLU()
-#         self.P7_2 = nn.Conv2d(feature_size, feature_size, kernel_size=3, stride=2, padding=1)
         
         # upsample C5 to get P5 from the FPN paper
         self.P5_1 = conv1x1(C5_size, feature_size)
