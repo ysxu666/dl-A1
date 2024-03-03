@@ -22,22 +22,6 @@ def calc_iou(a, b):
 
 
 
-# def calc_iou(a, b):
-#     ###################################################################
-#     # TODO: Please modify and fill the codes below to calculate the iou of the two boxes a and b
-#     ###################################################################
-    
-#     intersection = 0.0
-#     ua = 1.0
-
-#     ##################################################################
-
-    
-#     ua = torch.clamp(ua,min=1e-8)
-
-#     IoU = intersection / ua
-
-#     return IoU
 
 class FocalLoss(nn.Module):
 
