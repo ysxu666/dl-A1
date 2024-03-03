@@ -44,6 +44,12 @@ def main(args=None):
         retinanet = model.resnet50(num_classes=dataset_test.num_classes(), pretrained=False)
     elif parser.depth == 101:
         retinanet = model.resnet101(num_classes=dataset_test.num_classes(), pretrained=False)
+    elif parser.depth == 152:
+        retinanet = model.resnet152(num_classes=dataset_test.num_classes(), pretrained=False)
+    elif parser.depth == 18:
+        retinanet = model.resnet18(num_classes=dataset_test.num_classes(), pretrained=False)      
+    elif parser.depth == 34:
+        retinanet = model.resnet34(num_classes=dataset_test.num_classes(), pretrained=False)               
     else:
         raise ValueError('Unsupported model depth in source code, must be one of 18, 34, 50, 101, 152')
 
