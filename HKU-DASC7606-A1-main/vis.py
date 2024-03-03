@@ -46,7 +46,7 @@ def draw(imgroot, img, coco_true, coco_pred=None):
         for ann in anns:
             x, y, w, h = ann['bbox']
             category = ann['category_id']
-            plt.text(x, y, "pred_" + label_list[int(category) - 1], fontsize = 12)
+            plt.text(x, y, "pred_" + label_list[int(category) - 1], fontsize = 12,color='red'))
         coco_pred.showAnns(anns, draw_bbox=False)
 
 def main(args=None):
