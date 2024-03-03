@@ -40,7 +40,7 @@ def main(args=None):
 
     parser = parser.parse_args(args)
         # 构建基于参数的实验名称
-    experiment_name = f"depth_{parser.depth}_epochs_{parser.epochs}"
+    experiment_name = f"QFLdepth_{parser.depth}_epochs_{parser.epochs}"
 
     # 创建 TensorBoardX writer
     writer = SummaryWriter(f'runs/{experiment_name}')
